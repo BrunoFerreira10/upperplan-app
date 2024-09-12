@@ -54,3 +54,4 @@ phpunit.xml
 /docker
 /.docker
 /.devcontainer
+/node_virtual_env
