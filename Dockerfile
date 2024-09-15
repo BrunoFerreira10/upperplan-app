@@ -1,26 +1,19 @@
-# Usando a imagem oficial do PHP-FPM no Amazon ECR Public
-FROM public.ecr.aws/docker/library/php:fpm-alpine
+# Estender a imagem base gerada pelo primeiro Dockerfile
+FROM 339712924273.dkr.ecr.us-east-1.amazonaws.com/upperplan-glpi/container:latest
 
-# Instalar Nginx e outros pacotes necessários
-RUN apk add --no-cache nginx wget tar supervisor
-
-# Diretório de trabalho dentro do contêiner
+# Definir o diretório de trabalho
 WORKDIR /var/www/html
 
-# Baixar e descompactar a aplicação GLPI diretamente no contêiner
+# Baixar e preparar a última versão do GLPI
 RUN wget https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz \
     && tar -xzf glpi-10.0.16.tgz --strip-components=1 \
     && rm glpi-10.0.16.tgz
 
-# Copiar o arquivo de configuração do Nginx e PHP-FPM
-COPY ./nginx.conf /etc/nginx/nginx.conf
-#COPY ./php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+# Certificar que as pastas 'files' e 'config' são graváveis para o GLPI
+RUN chown -R www-data:www-data /var/www/html/files /var/www/html/config
 
-# Configurar o Supervisor para gerenciar Nginx e PHP-FPM
-COPY ./supervisord.conf /etc/supervisord.conf
-
-# Expor as portas do Nginx e PHP-FPM
+# Expor a porta 80 (o ELB vai redirecionar para HTTPS)
 EXPOSE 80
 
-# Inicializar o Supervisor, que gerencia o Nginx e o PHP-FPM
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Comando de inicialização do Apache
+CMD ["apachectl", "-D", "FOREGROUND"]
