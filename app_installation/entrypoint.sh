@@ -29,7 +29,7 @@ if [ ! -d /mnt/efs_glpi/logs ]; then
 fi
 
 # Copiar local_define.php de qualquer forma
-cp -f /tmp/local_define.php /mnt/efs_glpi/config/
+cp -f /tmp/local_define.php /mnt/efs_glpi/config/local_define.php
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração do banco de dados
@@ -37,7 +37,7 @@ cp -f /tmp/local_define.php /mnt/efs_glpi/config/
 echo "Configurando o banco de dados"
 
 # Copiar config_db.php de qualquer forma
-cp -f /tmp/config_db.php /mnt/efs_glpi/config/
+cp -f /tmp/config_db.php /mnt/efs_glpi/config/config_db.php
 
 # Configurar banco de dados dinamicamente
 # sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /etc/glpi/config_db.php
