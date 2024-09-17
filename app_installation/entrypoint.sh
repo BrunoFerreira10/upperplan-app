@@ -32,12 +32,6 @@ echo "Configurando o banco de dados"
 # Copiar config_db.php de qualquer forma
 cp -f /tmp/config_db.php /mnt/efs_glpi/config/config_db.php
 
-# Configurar banco de dados dinamicamente
-# sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /etc/glpi/config_db.php
-# sed -i "s/YOUR_DB_USER/$DB_USER/g" /etc/glpi/config_db.php
-# sed -i "s/YOUR_DB_PASSWORD/$DB_PASSWORD/g" /etc/glpi/config_db.php
-# sed -i "s/YOUR_DB_NAME/$DB_NAME/g" /etc/glpi/config_db.php
-
 # Remover pastas 'config' e 'files' do diretorio publico de qualquer forma
 rm -rf config
 rm -rf files
