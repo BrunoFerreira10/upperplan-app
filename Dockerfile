@@ -1,5 +1,6 @@
-# Utilizar a imagem base gerada pelo primeiro Dockerfile
-FROM 339712924273.dkr.ecr.us-east-1.amazonaws.com/upperplan-glpi/container:latest
+# Utilizar a imagem base gerada pelo primeiro Dockerfile - Recebida com argumento
+ARG BASE_REPOSITORY_URI
+FROM $BASE_REPOSITORY_URI
 
 # Criar e definir o diretório de trabalho
 RUN mkdir -p /var/www/glpi
