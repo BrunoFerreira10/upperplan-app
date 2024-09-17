@@ -37,7 +37,7 @@ RUN chown -R www-data:www-data /var/www/glpi
 ## ---------------------------------------------------------------------------------------------------------------------
 
 # Criar pastas compartilhadas (prepara para o EFS)
-RUN mkdir -p /mnt/efs_gpli
+RUN mkdir -p /mnt/efs_glpi
 
 # Arquivo downstream.php e local_define para mudar a pasta config de lugar.
 COPY app_installation/downstream.php inc/
