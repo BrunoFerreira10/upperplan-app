@@ -2,8 +2,8 @@
 FROM 339712924273.dkr.ecr.us-east-1.amazonaws.com/upperplan-glpi/container:latest
 
 # Criar e definir o diretório de trabalho
-RUN mkdir -p /var/www/glpi
-WORKDIR /var/www/glpi
+RUN mkdir -p /var/www/glpi/public
+WORKDIR /var/www/glpi/public
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração do Apache
@@ -20,30 +20,16 @@ COPY app_installation/server/etc/ /etc/
 RUN ln -s /etc/apache2/sites-available/glpi.conf /etc/apache2/sites-enabled/glpi.conf
 
 ## ---------------------------------------------------------------------------------------------------------------------
-## Instalação do GLPI
+## Implantação do GLPI
 ## ---------------------------------------------------------------------------------------------------------------------
 
 # Baixar e preparar a última versão do GLPI
-RUN wget https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz
+RUN wget -nv https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz
 RUN tar -xzf glpi-10.0.16.tgz --strip-components=1
 RUN rm glpi-10.0.16.tgz
 
 # Configurar permissões da aplicação
-RUN chown -R www-data:www-data /var/www/glpi
-
-# Argumentos de entrada do Docker file.
-# Recebe dados do banco de dados
-# ARG DB_HOST
-# ARG DB_NAME
-# ARG DB_USER
-# ARG DB_PASSWORD
-
-# Instalação do GLPI
-# RUN php bin/console db:install --no-interaction \
-#   --db-host=$DB_HOST --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASSWORD -r || true
-
-# Verificar a instalação
-# RUN php bin/console system:check_requirements
+RUN chown -R www-data:www-data /var/www/glpi/public
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração das pasta compartilhadas
