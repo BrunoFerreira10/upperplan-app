@@ -7,29 +7,29 @@ cd /var/www/glpi
 ## Configuração das pasta compartilhadas
 ## ---------------------------------------------------------------------------------------------------------------------
 # Verificar se está vazio e mover os arquivos se necessário
-if [ ! -d /etc/glpi ]; then
-  echo "Configurando /etc/glpi"
-  mv /var/www/glpi/config /etc/glpi
-  chown -R www-data:www-data /etc/glpi
-  chmod -R 775 /etc/glpi
+if [ ! -d /mnt/efs_glpi/config ]; then
+  echo "Configurando pasta config"
+  mv /var/www/glpi/config /mnt/efs_glpi/
+  # chown -R www-data:www-data /etc/glpi
+  # chmod -R 775 /etc/glpi
 fi
 
-if [ ! -d /var/lib/glpi ]; then
-  echo "Configurando /var/lib/glpi"
-  mv /var/www/glpi/files /var/lib/glpi
-  chown -R www-data:www-data /var/lib/glpi
-  chmod -R 775 /var/lib/glpi
+if [ ! -d /mnt/efs_glpi/files ]; then
+  echo "Configurando palsta files"
+  mv /var/www/glpi/files /mnt/efs_glpi/
+  chown -R www-data:www-data /mnt/efs_glpi/files
+  chmod -R 775 /mnt/efs_glpi/files
 fi
 
-if [ ! -d /var/log/glpi ]; then
-  echo "Configurando /var/log/glpi"
-  mkdir -p /var/log/glpi
-  chown -R www-data:www-data /var/log/glpi
-  chmod -R 775 /var/log/glpi
+if [ ! -d /mnt/efs_glpi/logs ]; then
+  echo "Configurando pasta logs"
+  mkdir -p /mnt/efs_glpi/logs
+  chown -R www-data:www-data /mnt/efs_glpi/logs
+  chmod -R 775 /mnt/efs_glpi/logs
 fi
 
 # Copiar local_define.php de qualquer forma
-cp /tmp/local_define.php /etc/glpi/
+cp -f /tmp/local_define.php /mnt/efs_glpi/config/
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração do banco de dados
@@ -37,7 +37,7 @@ cp /tmp/local_define.php /etc/glpi/
 echo "Configurando o banco de dados"
 
 # Copiar config_db.php de qualquer forma
-cp /tmp/config_db.php /etc/glpi/config_db.php
+cp -f /tmp/config_db.php /mnt/efs_glpi/config/
 
 # Configurar banco de dados dinamicamente
 # sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /etc/glpi/config_db.php
