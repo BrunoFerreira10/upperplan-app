@@ -39,11 +39,11 @@ ARG DB_USER
 ARG DB_PASSWORD
 
 # Instalação do GLPI
-RUN php bin/console db:install --no-interaction \
-  --db-host=$DB_HOST --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASSWORD -r || true
+# RUN php bin/console db:install --no-interaction \
+#   --db-host=$DB_HOST --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASSWORD -r || true
 
 # Verificar a instalação
-RUN php bin/console system:check_requirements
+# RUN php bin/console system:check_requirements
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração das pasta compartilhadas
