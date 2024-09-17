@@ -7,23 +7,16 @@ cd /var/www/glpi
 ## Configuração das pasta compartilhadas
 ## ---------------------------------------------------------------------------------------------------------------------
 # Verificar se está vazio e mover os arquivos se necessário
-if [ ! -d /mnt/efs_glpi/config ]; then
+if [ ! -f /mnt/efs_glpi/config/config_db.php ]; then
   echo "Configurando pasta config"
-  mv /var/www/glpi/config /mnt/efs_glpi/
-  # chown -R www-data:www-data /etc/glpi
-  # chmod -R 775 /etc/glpi
-fi
-
-if [ ! -d /mnt/efs_glpi/files ]; then
+  mv /var/www/glpi/config/* /mnt/efs_glpi/config
+  
   echo "Configurando palsta files"
-  mv /var/www/glpi/files /mnt/efs_glpi/
+  mv /var/www/glpi/files/* /mnt/efs_glpi/files/
   chown -R www-data:www-data /mnt/efs_glpi/files
   chmod -R 775 /mnt/efs_glpi/files
-fi
 
-if [ ! -d /mnt/efs_glpi/logs ]; then
   echo "Configurando pasta logs"
-  mkdir -p /mnt/efs_glpi/logs
   chown -R www-data:www-data /mnt/efs_glpi/logs
   chmod -R 775 /mnt/efs_glpi/logs
 fi
