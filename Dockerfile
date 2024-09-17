@@ -47,6 +47,8 @@ COPY app_installation/downstream.php inc/
 # Copiar o arquivo de configuração do banco de dados para pasta temporaria
 COPY app_installation/local_define.php /tmp
 COPY app_installation/config_db.php /tmp
+COPY app_installation/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração do Banco de Dados em arquivo temporario
