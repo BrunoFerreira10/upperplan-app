@@ -69,6 +69,28 @@ RUN [ ! -d config ] && rm -rf config
 RUN [ ! -d files ] && rm -rf files
 
 ## ---------------------------------------------------------------------------------------------------------------------
+## Configuração do Banco de Dados
+## ---------------------------------------------------------------------------------------------------------------------
+
+# Recebe dados do banco de dados
+ARG DB_HOST
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASSWORD
+
+# Copiar e configurar o arquivo de configuração do banco de dados
+COPY app_installation/config_db.php /etc/glpi
+RUN sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /etc/glpi/config_db.php
+RUN sed -i "s/YOUR_DB_USER/$DB_USER/g" /etc/glpi/config_db.php
+RUN sed -i "s/YOUR_DB_PASSWORD/$DB_PASSWORD/g" /etc/glpi/config_db.php
+RUN sed -i "s/YOUR_DB_NAME/$DB_NAME/g" /etc/glpi/config_db.php
+
+## ---------------------------------------------------------------------------------------------------------------------
+## Configurações adicionais do GPLI
+## ---------------------------------------------------------------------------------------------------------------------
+RUN rm -f /var/www/glpi/install/install.php
+
+## ---------------------------------------------------------------------------------------------------------------------
 ## Incialização do Apache
 ## ---------------------------------------------------------------------------------------------------------------------
 
