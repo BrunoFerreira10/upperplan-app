@@ -33,10 +33,10 @@ RUN chown -R www-data:www-data /var/www/glpi
 
 # Argumentos de entrada do Docker file.
 # Recebe dados do banco de dados
-ARG DB_HOST
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASSWORD
+# ARG DB_HOST
+# ARG DB_NAME
+# ARG DB_USER
+# ARG DB_PASSWORD
 
 # Instalação do GLPI
 # RUN php bin/console db:install --no-interaction \
@@ -55,22 +55,28 @@ COPY app_installation/downstream.php inc/
 # Move pastas 'compartilhadas' do GLPI para diretorios montados no EFS
 # Primeiro verifica se elas já existem
 RUN [ ! -d /etc/glpi ] && \
-mv config /etc/glpi && \
-chown -R www-data:www-data /etc/glpi && \
-chmod -R 775 /etc/glpi && \
-echo 'Configurado /etc/glpi'
+  mv config /etc/glpi && \
+  chown -R www-data:www-data /etc/glpi && \
+  chmod -R 775 /etc/glpi && \
+  echo 'Configurado /etc/glpi'
 
 RUN [ ! -d /var/lib/glpi ] && \
-mv files /var/lib/glpi && \
-chown -R www-data:www-data /var/lib/glpi && \
-chmod -R 775 /var/lib/glpi && \
-echo 'Configurado /var/lib/glpi'
+  mv files /var/lib/glpi && \
+  chown -R www-data:www-data /var/lib/glpi && \
+  chmod -R 775 /var/lib/glpi && \
+  echo 'Configurado /var/lib/glpi'
 
 RUN [ ! -d /var/log/glpi ] && \
-mkdir /var/log/glpi && \
-chown -R www-data:www-data /var/log/glpi && \
-chmod -R 775 /var/log/glpi && \
-echo 'Configurado /var/log/glpi'
+  mkdir /var/log/glpi && \
+  chown -R www-data:www-data /var/log/glpi && \
+  chmod -R 775 /var/log/glpi && \
+  echo 'Configurado /var/log/glpi'
+
+# Copiar o arquivo de configuração local, se não existir
+COPY app_installation/local_define.php /tmp
+RUN [ ! -f /etc/glpi/local_define.php ] && \
+  cp /tmp/local_define.php /etc/glpi
+RUN rm /tmp/local_define.php
 
 # Remover pastas 'config' e 'files' do diretorio publico de qualquer forma
 RUN [ ! -d config ] && rm -rf config
