@@ -2,8 +2,8 @@
 FROM 339712924273.dkr.ecr.us-east-1.amazonaws.com/upperplan-glpi/container:latest
 
 # Criar e definir o diretório de trabalho
-RUN mkdir -p /var/www/glpi/public
-WORKDIR /var/www/glpi/public
+RUN mkdir -p /var/www/glpi
+WORKDIR /var/www/glpi
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração do Apache
