@@ -29,7 +29,7 @@ RUN tar -xzf glpi-10.0.16.tgz --strip-components=1
 RUN rm glpi-10.0.16.tgz
 
 # Configurar permissões da aplicação
-RUN chown -R www-data:www-data /var/www/glpi/public
+RUN chown -R www-data:www-data /var/www/glpi
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração das pasta compartilhadas
