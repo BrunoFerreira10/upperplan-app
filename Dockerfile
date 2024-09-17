@@ -36,41 +36,20 @@ RUN chown -R www-data:www-data /var/www/glpi
 ## Configuração das pasta compartilhadas
 ## ---------------------------------------------------------------------------------------------------------------------
 
-# Arquivo downstream.php para mudar a pasta config de lugar.
+# Criar pastas compartilhadas (prepara para o EFS)
+# RUN mkdir -p /etc/glpi
+# RUN mkdir -p /var/lib/glpi
+# RUN mkdir -p /var/log/glpi
+
+# Arquivo downstream.php e local_define para mudar a pasta config de lugar.
 COPY app_installation/downstream.php inc/
 
-# Move pastas 'compartilhadas' do GLPI para diretorios montados no EFS
-# Primeiro verifica se elas já existem
-RUN [ ! -d /etc/glpi ] && \
-  mv config /etc/glpi && \
-  chown -R www-data:www-data /etc/glpi && \
-  chmod -R 775 /etc/glpi && \
-  echo 'Configurado /etc/glpi'
-
-RUN [ ! -d /var/lib/glpi ] && \
-  mv files /var/lib/glpi && \
-  chown -R www-data:www-data /var/lib/glpi && \
-  chmod -R 775 /var/lib/glpi && \
-  echo 'Configurado /var/lib/glpi'
-
-RUN [ ! -d /var/log/glpi ] && \
-  mkdir /var/log/glpi && \
-  chown -R www-data:www-data /var/log/glpi && \
-  chmod -R 775 /var/log/glpi && \
-  echo 'Configurado /var/log/glpi'
-
-# Copiar o arquivo de configuração local, se não existir
+# Copiar o arquivo de configuração do banco de dados para pasta temporaria
 COPY app_installation/local_define.php /tmp
-RUN [ ! -f /etc/glpi/local_define.php ] && \
-  cp /tmp/local_define.php /etc/glpi
-RUN rm /tmp/local_define.php
-
-# Remover pastas 'config' e 'files' do diretorio publico de qualquer forma
-RUN [ ! -d config ] && rm -rf config
-RUN [ ! -d files ] && rm -rf files
+COPY app_installation/config_db.php /tmp
 
 ## ---------------------------------------------------------------------------------------------------------------------
-## Configuração do Banco de Dados
+## Configuração do Banco de Dados em arquivo temporario
 ## ---------------------------------------------------------------------------------------------------------------------
 
 # Recebe dados do banco de dados
@@ -80,16 +59,10 @@ ARG DB_USER
 ARG DB_PASSWORD
 
 # Copiar e configurar o arquivo de configuração do banco de dados
-COPY app_installation/config_db.php /etc/glpi
-RUN sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /etc/glpi/config_db.php
-RUN sed -i "s/YOUR_DB_USER/$DB_USER/g" /etc/glpi/config_db.php
-RUN sed -i "s/YOUR_DB_PASSWORD/$DB_PASSWORD/g" /etc/glpi/config_db.php
-RUN sed -i "s/YOUR_DB_NAME/$DB_NAME/g" /etc/glpi/config_db.php
-
-## ---------------------------------------------------------------------------------------------------------------------
-## Configurações adicionais do GPLI
-## ---------------------------------------------------------------------------------------------------------------------
-RUN rm -f /var/www/glpi/install/install.php
+RUN sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /tmp/config_db.php
+RUN sed -i "s/YOUR_DB_USER/$DB_USER/g" /tmp/config_db.php
+RUN sed -i "s/YOUR_DB_PASSWORD/$DB_PASSWORD/g" /tmp/config_db.php
+RUN sed -i "s/YOUR_DB_NAME/$DB_NAME/g" /tmp/config_db.php
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Incialização do Apache
@@ -101,7 +74,7 @@ EXPOSE 80
 # Verificar depois a limpeza de credenciais
 # https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
-# Comando de inicialização do Apache
-CMD ["apachectl", "-D", "FOREGROUND"]
+# Definir o entrypoint como o script de inicialização
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 ## ---------------------------------------------------------------------------------------------------------------------
