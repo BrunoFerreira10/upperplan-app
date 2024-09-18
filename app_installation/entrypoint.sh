@@ -11,7 +11,7 @@ if [ ! -f /mnt/efs_glpi/config/config_db.php ]; then
   echo "Configurando pasta config"
   mv /var/www/glpi/config/* /mnt/efs_glpi/config
   
-  echo "Configurando palsta files"
+  echo "Configurando pasta files"
   mv /var/www/glpi/files/* /mnt/efs_glpi/files/
   chown -R www-data:www-data /mnt/efs_glpi/files
   chmod -R 775 /mnt/efs_glpi/files
@@ -40,9 +40,6 @@ rm -rf files
 rm /tmp/local_define.php
 rm /tmp/config_db.php
 
-echo "Testando log no entrypoint"
-
-
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configurações adicionais do GLPI
 ## ---------------------------------------------------------------------------------------------------------------------
@@ -51,6 +48,7 @@ rm -f /var/www/glpi/install/install.php
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Inicialização do Apache
 ## ---------------------------------------------------------------------------------------------------------------------
+echo "Entrypoint iniciando o Apache"
 exec apachectl -D FOREGROUND
 
 ## ---------------------------------------------------------------------------------------------------------------------
