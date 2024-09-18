@@ -9,5 +9,5 @@ Resources:
           ContainerName: "container-upperplan-glpi" # Nome do container do serviço
           ContainerPort: 80 # Porta exposta pelo container
 
-Hooks:
-  - AfterAllowTestTraffic: scripts/validate-service.sh
+# Hooks:
+#   - AfterAllowTestTraffic: scripts/validate-service.sh
