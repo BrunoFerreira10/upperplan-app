@@ -1,0 +1,34 @@
+{
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/apache2/access.log",
+            "log_group_name": "/upperplan-glpi/ecs/apache-access",
+            "log_stream_name": "{instance_id}/apache-access",
+            "timestamp_format": "%d/%b/%Y:%H:%M:%S %z"
+          },
+          {
+            "file_path": "/var/log/apache2/error.log",
+            "log_group_name": "/upperplan-glpi/ecs/apache-error",
+            "log_stream_name": "{instance_id}/apache-error",
+            "timestamp_format": "%Y-%m-%d %H:%M:%S"
+          },
+          {
+            "file_path": "/var/log/php8.3-fpm.log",
+            "log_group_name": "/upperplan-glpi/ecs/php-error",
+            "log_stream_name": "{instance_id}/php-error",
+            "timestamp_format": "%Y-%m-%d %H:%M:%S"
+          },
+          {
+            "file_path": "/var/log/containers/container.log",
+            "log_group_name": "/upperplan-glpi/ecs/containers",
+            "log_stream_name": "{instance_id}/containers",
+            "timestamp_format": "%Y-%m-%d %H:%M:%S"
+          }
+        ]
+      }
+    }
+  }
+}

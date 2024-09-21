@@ -5,6 +5,10 @@ FROM $BASE_REPOSITORY_URI
 # Criar e definir o diretório de trabalho
 RUN mkdir -p /var/www/glpi
 WORKDIR /var/www/glpi
+## ---------------------------------------------------------------------------------------------------------------------
+## Configuração do CloudWatch
+## ---------------------------------------------------------------------------------------------------------------------
+# COPY app_installation/cloudwatch-config.json /opt/aws/amazon-cloudwatch-agent/bin/
 
 ## ---------------------------------------------------------------------------------------------------------------------
 ## Configuração do Apache

@@ -46,8 +46,11 @@ rm /tmp/config_db.php
 rm -f /var/www/glpi/install/install.php
 
 ## ---------------------------------------------------------------------------------------------------------------------
-## Inicialização do Apache
+## Inicialização do PHP-FPM e Apache
 ## ---------------------------------------------------------------------------------------------------------------------
+echo "Iniciando PHP-FPM"
+service php8.3-fpm start
+
 echo "Entrypoint iniciando o Apache"
 exec apachectl -D FOREGROUND
 
