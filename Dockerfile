@@ -6,13 +6,8 @@ FROM $BASE_REPOSITORY_URI
 RUN mkdir -p /var/www/glpi
 WORKDIR /var/www/glpi
 
-## ---------------------------------------------------------------------------------------------------------------------
-## Configuração do Apache
-## ---------------------------------------------------------------------------------------------------------------------
-
 # Limpar configurações padrão do Apache
-RUN rm /etc/apache2/sites-available/*
-RUN rm /etc/apache2/sites-enabled/*
+RUN rm /etc/apache2/sites-available/* /etc/apache2/sites-enabled/*
 
 # Copiar a pasta server/etc do diretório local para /etc no container
 COPY app_installation/server/etc/ /etc/
@@ -20,37 +15,26 @@ COPY app_installation/server/etc/ /etc/
 # Habilitar o site do GLPI
 RUN ln -s /etc/apache2/sites-available/glpi.conf /etc/apache2/sites-enabled/glpi.conf
 
-## ---------------------------------------------------------------------------------------------------------------------
-## Implantação do GLPI
-## ---------------------------------------------------------------------------------------------------------------------
+# Configurar PHP-FPM no Apache
+RUN a2enmod proxy_fcgi setenvif && a2enconf php7.4-fpm
 
 # Baixar e preparar a última versão do GLPI
-RUN wget -nv https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz
-RUN tar -xzf glpi-10.0.16.tgz --strip-components=1
-RUN rm glpi-10.0.16.tgz
+RUN wget -nv https://github.com/glpi-project/glpi/releases/download/10.0.16/glpi-10.0.16.tgz \
+    && tar -xzf glpi-10.0.16.tgz --strip-components=1 && rm glpi-10.0.16.tgz
 
 # Configurar permissões da aplicação
 RUN chown -R www-data:www-data /var/www/glpi
 
-## ---------------------------------------------------------------------------------------------------------------------
-## Configuração das pasta compartilhadas
-## ---------------------------------------------------------------------------------------------------------------------
-
-# Criar pastas compartilhadas (prepara para o EFS)
+# Criar pastas compartilhadas (preparar para o EFS)
 RUN mkdir -p /mnt/efs_glpi
 
-# Arquivo downstream.php e local_define para mudar a pasta config de lugar.
-COPY app_installation/downstream.php inc/
-
-# Copiar o arquivo de configuração do banco de dados para pasta temporaria
+# Copiar o arquivo de configuração do banco de dados
 COPY app_installation/local_define.php /tmp
 COPY app_installation/config_db.php /tmp
+
+# Arquivos adicionais
 COPY app_installation/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
-
-## ---------------------------------------------------------------------------------------------------------------------
-## Configuração do Banco de Dados em arquivo temporario
-## ---------------------------------------------------------------------------------------------------------------------
 
 # Recebe dados do banco de dados
 ARG DB_HOST
@@ -58,23 +42,14 @@ ARG DB_NAME
 ARG DB_USER
 ARG DB_PASSWORD
 
-# Copiar e configurar o arquivo de configuração do banco de dados
-RUN sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /tmp/config_db.php
-RUN sed -i "s/YOUR_DB_USER/$DB_USER/g" /tmp/config_db.php
-RUN sed -i "s/YOUR_DB_PASSWORD/$DB_PASSWORD/g" /tmp/config_db.php
-RUN sed -i "s/YOUR_DB_NAME/$DB_NAME/g" /tmp/config_db.php
-
-## ---------------------------------------------------------------------------------------------------------------------
-## Incialização do Apache
-## ---------------------------------------------------------------------------------------------------------------------
+# Configurar o banco de dados no GLPI
+RUN sed -i "s/YOUR_DB_HOST/$DB_HOST/g" /tmp/config_db.php && \
+    sed -i "s/YOUR_DB_USER/$DB_USER/g" /tmp/config_db.php && \
+    sed -i "s/YOUR_DB_PASSWORD/$DB_PASSWORD/g" /tmp/config_db.php && \
+    sed -i "s/YOUR_DB_NAME/$DB_NAME/g" /tmp/config_db.php
 
 # Expor a porta 80 (o ELB vai redirecionar para HTTPS)
 EXPOSE 80
 
-# Verificar depois a limpeza de credenciais
-# https://docs.docker.com/engine/reference/commandline/login/#credentials-store
-
-# Definir o entrypoint como o script de inicialização
+# Definir o entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-## ---------------------------------------------------------------------------------------------------------------------
