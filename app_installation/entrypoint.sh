@@ -19,6 +19,8 @@ if [ ! -f /mnt/efs_glpi/config/config_db.php ]; then
   echo "Configurando pasta logs"
   chown -R www-data:www-data /mnt/efs_glpi/logs
   chmod -R 775 /mnt/efs_glpi/logs
+
+  php bin/console glpi:security:change_key
 fi
 
 # Copiar local_define.php de qualquer forma
