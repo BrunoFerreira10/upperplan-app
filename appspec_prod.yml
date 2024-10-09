@@ -1,0 +1,13 @@
+version: 0.0
+
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "arn:aws:ecs:us-east-1:339712924273:task-definition/prod_task_upperplan_glpi"
+        LoadBalancerInfo:
+          ContainerName: "prod_container_upperplan_glpi" # Nome do container do serviço
+          ContainerPort: 80 # Porta exposta pelo container
+
+# Hooks:
+#   - AfterAllowTestTraffic: scripts/validate-service.sh
