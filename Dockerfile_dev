@@ -19,7 +19,7 @@ RUN rm /etc/apache2/sites-available/*
 RUN rm /etc/apache2/sites-enabled/*
 
 # Copiar a pasta server/etc do diretório local para /etc no container
-COPY app_installation/server/etc/ /etc/
+COPY app_installation/server_dev/etc/ /etc/
 
 # Habilitar o site do GLPI
 RUN ln -s /etc/apache2/sites-available/glpi.conf /etc/apache2/sites-enabled/glpi.conf
