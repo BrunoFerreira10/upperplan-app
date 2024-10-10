@@ -45,6 +45,7 @@ RUN mkdir -p /mnt/efs_glpi
 
 # Arquivo downstream.php e local_define para mudar a pasta config de lugar.
 COPY app_installation/downstream.php inc/
+RUN chown www-data:www-data inc/downstream.php
 
 # Copiar o arquivo de configuração do banco de dados para pasta temporaria
 COPY app_installation/local_define.php /tmp

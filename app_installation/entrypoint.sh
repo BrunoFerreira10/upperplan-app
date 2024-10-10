@@ -20,7 +20,8 @@ if [ ! -f /mnt/efs_glpi/config/config_db.php ]; then
   chown -R www-data:www-data /mnt/efs_glpi/logs
   chmod -R 775 /mnt/efs_glpi/logs
 
-  php bin/console glpi:security:change_key
+  php bin/console db:install --config-dir=/mnt/efs_glpi/config -n
+  php bin/console glpi:security:change_key --config-dir=/mnt/efs_glpi/config -n
 fi
 
 # Copiar local_define.php de qualquer forma
